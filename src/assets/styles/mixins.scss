@@ -1,0 +1,22 @@
+$tablet: 1025px;
+$mobile: 768px;
+
+@mixin forBreakpoint($max) {
+  @media (max-width: $max) {
+    & {
+      @content;
+    }
+  }
+}
+
+@mixin forTablet {
+ @include forBreakpoint($tablet) {
+  @content;
+ };
+}
+
+@mixin forMobile {
+  @include forBreakpoint($mobile) {
+    @content;
+  };
+ }

@@ -2,6 +2,10 @@
   <div class="product-list">
     <product-item />
     <product-item />
+    <product-item />
+    <product-item />
+    <product-item />
+    <product-item />
   </div>
 </template>
 
@@ -16,8 +20,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .product-list {
   display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  @include forTablet {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include forMobile {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 </style>

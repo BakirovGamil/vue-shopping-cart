@@ -58,9 +58,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .product-item {
-  width: 220px;
+  max-width: 220px;
 }
 .image {
   height: 320px;
@@ -71,25 +71,29 @@ export default {
   padding: 0 20px;
   text-align: center;
   position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: rgb(234, 191, 0);
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
-.title::before {
-  content: '';
-  display: block;
-  width: 20px;
-  height: 2px;
-  background-color: rgb(234, 191, 0);
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
+
 .price {
   text-align: center;
   margin: 0 0 10px 0;
+
+  b {
+    font-size: 1.5rem;
+  }
 }
-.price b {
-  font-size: 1.5rem;
-}
+
 .currency {
   margin: 0 5px 0 0;
 }
@@ -101,8 +105,9 @@ export default {
   transition: background-color 0.2s ease 0s;
   cursor: pointer;
   color: white;
-}
-.button_hovered {
-  background-color: rgb(234, 191, 0);
+
+  &_hovered {
+    background-color: rgb(234, 191, 0);
+  }
 }
 </style>
