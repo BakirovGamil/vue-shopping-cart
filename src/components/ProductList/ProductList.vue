@@ -1,6 +1,6 @@
 <template>
   <div class="product-list">
-    <product-item v-for="product in products" :key="product.id" class="product-list__item" />
+    <product-item v-for="product in products" :key="product.id" :product="product" class="product-list__item" />
   </div>
 </template>
 
@@ -26,6 +26,7 @@ export default {
       const response = await ProductApi.getProducts();
 
       this.products = response.data.products;
+      console.log(response.data.products);
     }
   }
 };

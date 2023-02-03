@@ -19,13 +19,20 @@
 </template>
 
 <script>
+
 export default {
   name: 'ProductItem',
+  props: {
+    product: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       imageUrl: new URL(
-        '/src/assets/products/876661122392077-1-product.webp',
-        import.meta.url
+        `/src/assets/products/${this.product.sku}-1-product.webp`,
+        window.location.origin
       ).href,
       hovered: false,
     };
@@ -47,12 +54,12 @@ export default {
   },
   watch: {
     hovered() {
-      let imgPath = '/src/assets/products/876661122392077-1-product.webp';
+      let imgPath = `/src/assets/products/${this.product.sku}-1-product.webp`;
       if (this.hovered) {
-        imgPath = '/src/assets/products/876661122392077-2-product.webp';
+        imgPath = `/src/assets/products/${this.product.sku}-2-product.webp`;
       }
 
-      this.imageUrl = new URL(imgPath, import.meta.url).href;
+      this.imageUrl = new URL(imgPath, window.location.origin).href;
     },
   },
 };
