@@ -1,15 +1,11 @@
 <template>
   <div class="product-list">
-    <product-item />
-    <product-item />
-    <product-item />
-    <product-item />
-    <product-item />
-    <product-item />
+    <product-item v-for="product in products" :key="product.id" class="product-list__item" />
   </div>
 </template>
 
 <script>
+import ProductApi from '@/api/ProductApi';
 import ProductItem from '@/components/ProductList/ProductItem/ProductItem.vue';
 
 export default {
@@ -17,6 +13,21 @@ export default {
   components: {
     ProductItem,
   },
+  data() {
+    return {
+      products: []
+    }
+  },
+  created() {
+    this.getProducts();
+  },
+  methods: {
+    async getProducts() {
+      const response = await ProductApi.getProducts();
+
+      this.products = response.data.products;
+    }
+  }
 };
 </script>
 
@@ -30,5 +41,9 @@ export default {
   @include forMobile {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+.product-list__item {
+  padding: 10px;
+  margin: 0 0 30px 0;
 }
 </style>
