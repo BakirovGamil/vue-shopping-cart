@@ -2,7 +2,14 @@
   <div class="product-filter">
     <p class="title"><b>Sizes:</b></p>
     <div class="checkbox-container" v-for="size in filter" :key="size">
-      <input type="checkbox" :id="size" class="checkbox" v-model="filterValue" :value="size"/>
+      <input
+        type="checkbox"
+        :id="size"
+        class="checkbox"
+        v-model="filterValue"
+        :value="size"
+        @change="filterProducts"
+      />
       <label :for="size" class="label">
         <span class="size">{{ size }}</span>
       </label>
@@ -14,49 +21,51 @@
 export default {
   name: 'ProductFilter',
   emits: {
-    'done': (v) => Array.isArray(v)
+    done: (v) => Array.isArray(v),
   },
   props: {
     filter: {
       type: Array,
-      required: true
+      required: true,
     },
     products: {
       type: Array,
       required: false,
-      default: () => []
+      default: () => [],
     },
     property: {
       type: String,
       required: false,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
-      filterValue: []
+      filterValue: [],
     };
   },
-  computed: {
-    filteredProducts() {
-      if(!this.filterValue.length) {
-        return this.products;
+  methods: {
+    filterProducts() {
+      let filteredProducts = this.products;
+
+      if (this.filterValue.length) {
+        filteredProducts = this.products.filter((p) => {
+          return this.filterValue.some((f) => {
+            if (Array.isArray(p[this.property])) {
+              return p[this.property].some((v) => f === v);
+            }
+
+            return p[this.property] === f;
+          });
+        });
       }
 
-      return this.products.filter(p => {
-        return this.filterValue.some(f => {
-          if(Array.isArray(p[this.property])) {
-            return p[this.property].some((v) => f === v);
-          }
-            
-          return p[this.property] === f;
-        })
-      });
-    }
+      this.$emit('done', filteredProducts);
+    },
   },
   watch: {
-    filteredProducts() {
-      this.$emit('done', this.filteredProducts);
+    products() {
+      this.filterProducts();
     }
   }
 };
