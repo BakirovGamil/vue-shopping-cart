@@ -19,28 +19,30 @@
 </template>
 
 <script>
-
 export default {
   name: 'ProductItem',
   props: {
     product: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       hovered: false,
     };
   },
+
   methods: {
     mouseOver() {
       this.hovered = true;
     },
+
     mouseLeave() {
       this.hovered = false;
     },
   },
+
   computed: {
     imgUrl() {
       let imgPath = `/src/assets/products/${this.product.sku}-1-product.webp`;
@@ -50,17 +52,17 @@ export default {
 
       return new URL(imgPath, window.location.origin).href;
     },
+
     imgStyleObject() {
       return {
         background: `url(${this.imgUrl}) center/cover no-repeat`,
       };
     },
-  }
+  },
 };
 </script>
 
 <style scoped lang="scss">
-
 .image {
   height: 320px;
 }
@@ -70,6 +72,10 @@ export default {
   padding: 0 20px;
   text-align: center;
   position: relative;
+
+  @include forMobile {
+    font-size: 0.8rem;
+  }
 
   &::before {
     content: '';
