@@ -5,6 +5,7 @@
       :key="product.id"
       :product="product"
       class="product-list__item"
+      @addToCart="addToCart"
     />
   </div>
 </template>
@@ -14,6 +15,9 @@ import ProductItem from '@/components/ProductList/ProductItem/ProductItem.vue';
 
 export default {
   name: 'ProductList',
+  emits: {
+    addToCart: (v) => typeof v === 'object',
+  },
   components: {
     ProductItem,
   },
@@ -21,6 +25,11 @@ export default {
     products: {
       type: Array,
       required: true,
+    },
+  },
+  methods: {
+    addToCart(product) {
+      this.$emit('addToCart', product);
     },
   },
 };

@@ -1,22 +1,22 @@
 <template>
   <div class="cart-item">
-    <button title="remove product from cart" class="cart-item__remove"></button>
+    <button @click="remove" title="remove product from cart" class="cart-item__remove"></button>
     <img
-      src="@/assets/products/9197907543445676-1-cart.webp"
-      alt="Skater Black Sweatshirt"
+      :src="imgUrl"
+      :alt="product.title"
       class="cart-item__img"
     />
     <div class="cart-item__info">
-      <p class="cart-item__name">Skater Black Sweatshirt</p>
+      <p class="cart-item__title"> {{ product.title }}</p>
       <p class="cart-item__style-quantity">
-        XL | Tony Hawk <br />Quantity: 1
+        {{ product.style }} <br /> Quantity: {{ product.quantity }}
       </p>
     </div>
     <div class="cart-item__price">
-      <p :style="{ margin: '1rem 0' }">$ 25.90</p>
+      <p :style="{ margin: '1rem 0' }">$ {{ product.price.toFixed(2) }}</p>
       <div>
-        <button class="cart-item__decrement cart-item__btn" disabled>-</button>
-        <button class="cart-item__increment cart-item__btn">+</button>
+        <button class="cart-item__decrement cart-item__btn" @click="decrementQuantity" :disabled="product.quantity <= 1">-</button>
+        <button class="cart-item__increment cart-item__btn" @click="incrementQuantity">+</button>
       </div>
     </div>
   </div>
@@ -25,6 +25,33 @@
 <script>
 export default {
   name: 'CartItem',
+  emits: {
+    remove: v => typeof v === 'object',
+    incrementQuantity: v => typeof v === 'object',
+    decrementQuantity: v => typeof v === 'object'
+  },
+  props: {
+    product: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    remove() {
+      this.$emit('remove', this.product);
+    },
+    incrementQuantity() {
+      this.$emit('incrementQuantity', this.product);
+    },
+    decrementQuantity() {
+      this.$emit('decrementQuantity', this.product);
+    }
+  },
+  computed: {
+    imgUrl() {
+      return new URL(`/src/assets/products/${this.product.sku}-1-cart.webp`, window.location.origin).href;
+    }
+  }
 };
 </script>
 
@@ -72,7 +99,7 @@ export default {
     margin: 0px;
   }
 
-  &__name {
+  &__title {
     color: rgb(236, 236, 236);
     margin: 0px;
   }

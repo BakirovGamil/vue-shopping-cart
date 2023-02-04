@@ -1,8 +1,13 @@
 <template>
   <main>
     <div class="wrapper">
-      <shopping-cart/>
-      <dual-ring-loader :loading="isLoading" class="loader"/>
+      <shopping-cart
+        :cart="cart"
+        @incrementQuantity="incrementQuantity"
+        @decrementQuantity="decrementQuantity"
+        @remove="remove"
+      />
+      <dual-ring-loader :loading="isLoading" class="loader" />
       <div class="sidebar">
         <product-filter
           :filter="['XS', 'S', 'M', 'ML', 'L', 'XL', 'XXL']"
@@ -13,7 +18,7 @@
       </div>
       <div class="content">
         <p class="founded">{{ filteredProducts.length }} Product(s) found</p>
-        <product-list :products="filteredProducts"/>
+        <product-list :products="filteredProducts" @addToCart="addToCart" />
       </div>
     </div>
   </main>
@@ -28,18 +33,19 @@ import ShoppingCart from '@/components/ShoppingCart/ShoppingCart.vue';
 
 export default {
   name: 'ProductsView',
+  FILTER_PROPERTY: 'availableSizes',
   components: {
     ProductList,
     ProductFilter,
     DualRingLoader,
-    ShoppingCart
+    ShoppingCart,
   },
-  FILTER_PROPERTY: 'availableSizes',
   data() {
     return {
       products: [],
       filteredProducts: [],
-      isLoadingProducts: false
+      isLoadingProducts: false,
+      cart: [],
     };
   },
   created() {
@@ -56,7 +62,49 @@ export default {
     },
     setFilteredProducts(filteredProducts) {
       this.filteredProducts = filteredProducts;
-    }
+    },
+    addToCart(product) {
+      const newProduct = {
+        ...product,
+        quantity: 1,
+      };
+
+      const isInCart = Boolean(this.cart.find((p) => p.id === product.id));
+      if (isInCart) {
+        this.cart = this.cart.map((p) => {
+          if (p.id === product.id) {
+            return { ...p, quantity: p.quantity + 1 };
+          }
+
+          return p;
+        });
+
+        return;
+      }
+
+      this.cart.push(newProduct);
+    },
+    remove(product) {
+      this.cart = this.cart.filter(p => p.id !== product.id);
+    },
+    incrementQuantity(product) {
+      this.cart = this.cart.map(p => {
+        if(p.id === product.id) {
+          return {...p, quantity: p.quantity + 1};
+        }
+
+        return p;
+      });
+    },
+    decrementQuantity(product) {
+      this.cart = this.cart.map(p => {
+        if(p.id === product.id) {
+          return {...p, quantity: p.quantity - 1};
+        }
+
+        return p;
+      });
+    },
   },
 };
 </script>
@@ -87,7 +135,7 @@ export default {
   }
 }
 .founded {
-  margin: 10px 0 ;
+  margin: 10px 0;
   padding: 0 0 0 10px;
 }
 </style>

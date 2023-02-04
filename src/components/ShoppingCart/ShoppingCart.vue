@@ -7,19 +7,29 @@
   >
     <button class="shopping-cart__btn" @click="handleToogleCart">
       <span v-if="isOpen">X</span>
-      <cart-icon v-else />
+      <cart-icon v-else :quantity="quantity" />
     </button>
     <div class="shopping-cart__body">
       <div class="shopping-cart__header">
-        <cart-icon class="shopping-cart__icon" />
+        <cart-icon class="shopping-cart__icon" :quantity="quantity" />
         <span class="shopping-cart__title">Cart</span>
       </div>
       <div class="shopping-cart__list">
-        <cart-item />
+        <p class="shopping-cart__empty" v-if="!cart.length">
+          Add some products in the cart <br />:)
+        </p>
+        <cart-item
+          v-for="product in cart"
+          :key="product.id"
+          :product="product"
+          @incrementQuantity="incrementQuantity"
+          @decrementQuantity="decrementQuantity"
+          @remove="remove"
+        />
       </div>
       <div class="shopping-cart__footer">
         <p class="shopping-cart__total">TOTAL</p>
-        <div class="shopping-cart__total-value">$ 25.90</div>
+        <div class="shopping-cart__total-value">$ {{ total.toFixed(2) }}</div>
         <button class="shopping-cart__checkout">CHECKOUT</button>
       </div>
     </div>
@@ -36,6 +46,18 @@ export default {
     CartIcon,
     CartItem,
   },
+  emits: {
+    remove: (v) => typeof v === 'object',
+    incrementQuantity: (v) => typeof v === 'object',
+    decrementQuantity: (v) => typeof v === 'object',
+  },
+  props: {
+    cart: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+  },
   data() {
     return {
       isOpen: false,
@@ -44,6 +66,26 @@ export default {
   methods: {
     handleToogleCart() {
       this.isOpen = !this.isOpen;
+    },
+    remove(product) {
+      this.$emit('remove', product);
+    },
+    incrementQuantity(product) {
+      this.$emit('incrementQuantity', product);
+    },
+    decrementQuantity(product) {
+      this.$emit('decrementQuantity', product);
+    },
+  },
+  computed: {
+    total() {
+      return this.cart.reduce(
+        (prev, product) => prev + product.price * product.quantity,
+        0
+      );
+    },
+    quantity() {
+      return this.cart.reduce((prev, product) => prev + product.quantity, 0);
     },
   },
 };
@@ -60,6 +102,13 @@ export default {
   transform: translate(100%, 0);
   z-index: 99;
   transition: transform 0.2s ease 0s;
+
+  &__empty {
+    color: rgb(236, 236, 236);
+    text-align: center;
+    line-height: 40px;
+    margin: 10px 0;
+  }
 
   &__btn {
     border: 0px;
@@ -86,6 +135,23 @@ export default {
 
     &_open &__btn {
       left: 0;
+    }
+  }
+
+  &__body {
+    overflow-y: scroll;
+    height: 100%;
+
+    &::-webkit-scrollbar {
+      appearance: none;
+      width: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgb(12, 11, 16);
     }
   }
 

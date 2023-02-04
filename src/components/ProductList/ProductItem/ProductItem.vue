@@ -12,6 +12,7 @@
       :class="{
         button_hovered: hovered,
       }"
+      @click="addToCart"
     >
       Add to cart
     </button>
@@ -21,6 +22,9 @@
 <script>
 export default {
   name: 'ProductItem',
+  emits: {
+    addToCart: (v) => typeof v === 'object',
+  },
   props: {
     product: {
       type: Object,
@@ -40,6 +44,10 @@ export default {
 
     mouseLeave() {
       this.hovered = false;
+    },
+
+    addToCart() {
+      this.$emit('addToCart', this.product);
     },
   },
 

@@ -1,12 +1,19 @@
 <template>
   <div class="cart-icon">
-    <div title="Products in cart quantity" class="cart-icon__quantity">1</div>
+    <div title="Products in cart quantity" class="cart-icon__quantity">{{ quantity }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CartIcon'
+  name: 'CartIcon',
+  props: {
+    quantity: {
+      type: Number,
+      required: false,
+      default: 0
+    }
+  }
 };
 </script>
 
