@@ -30,10 +30,6 @@ export default {
   },
   data() {
     return {
-      imageUrl: new URL(
-        `/src/assets/products/${this.product.sku}-1-product.webp`,
-        window.location.origin
-      ).href,
       hovered: false,
     };
   },
@@ -46,22 +42,20 @@ export default {
     },
   },
   computed: {
-    imgStyleObject() {
-      return {
-        background: `url(${this.imageUrl}) center/cover no-repeat`,
-      };
-    },
-  },
-  watch: {
-    hovered() {
+    imgUrl() {
       let imgPath = `/src/assets/products/${this.product.sku}-1-product.webp`;
       if (this.hovered) {
         imgPath = `/src/assets/products/${this.product.sku}-2-product.webp`;
       }
 
-      this.imageUrl = new URL(imgPath, window.location.origin).href;
+      return new URL(imgPath, window.location.origin).href;
     },
-  },
+    imgStyleObject() {
+      return {
+        background: `url(${this.imgUrl}) center/cover no-repeat`,
+      };
+    },
+  }
 };
 </script>
 
