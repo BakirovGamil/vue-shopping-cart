@@ -66,9 +66,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.product-item {
-  max-width: 220px;
-}
+
 .image {
   height: 320px;
 }

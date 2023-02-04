@@ -1,11 +1,15 @@
 <template>
   <div class="product-list">
-    <product-item v-for="product in products" :key="product.id" :product="product" class="product-list__item" />
+    <product-item
+      v-for="product in products"
+      :key="product.id"
+      :product="product"
+      class="product-list__item"
+    />
   </div>
 </template>
 
 <script>
-import ProductApi from '@/api/ProductApi';
 import ProductItem from '@/components/ProductList/ProductItem/ProductItem.vue';
 
 export default {
@@ -13,22 +17,12 @@ export default {
   components: {
     ProductItem,
   },
-  data() {
-    return {
-      products: []
-    }
+  props: {
+    products: {
+      type: Array,
+      required: true,
+    },
   },
-  created() {
-    this.getProducts();
-  },
-  methods: {
-    async getProducts() {
-      const response = await ProductApi.getProducts();
-
-      this.products = response.data.products;
-      console.log(response.data.products);
-    }
-  }
 };
 </script>
 
