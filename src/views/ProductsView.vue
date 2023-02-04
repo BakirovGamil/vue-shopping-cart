@@ -1,6 +1,7 @@
 <template>
   <main>
     <div class="wrapper">
+      <shopping-cart/>
       <dual-ring-loader :loading="isLoading" class="loader"/>
       <div class="sidebar">
         <product-filter
@@ -23,13 +24,15 @@ import ProductApi from '@/api/ProductApi';
 import ProductList from '@/components/ProductList/ProductList.vue';
 import ProductFilter from '@/components/ProductFilter/ProductFilter.vue';
 import DualRingLoader from '@/components/DualRingLoader/DualRingLoader.vue';
+import ShoppingCart from '@/components/ShoppingCart/ShoppingCart.vue';
 
 export default {
   name: 'ProductsView',
   components: {
     ProductList,
     ProductFilter,
-    DualRingLoader
+    DualRingLoader,
+    ShoppingCart
   },
   FILTER_PROPERTY: 'availableSizes',
   data() {
@@ -85,5 +88,6 @@ export default {
 }
 .founded {
   margin: 10px 0 ;
+  padding: 0 0 0 10px;
 }
 </style>
