@@ -1,9 +1,10 @@
 <template>
   <div class="product-list">
     <product-item
-      v-for="product in products"
+      v-for="(product, index) in products"
       :key="product.id"
       :product="product"
+      :tabindex="index + 1"
       class="product-list__item"
       @addToCart="addToCart"
     />
@@ -45,9 +46,14 @@ export default {
   @include forMobile {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-.product-list__item {
-  padding: 10px;
-  margin: 0 0 30px 0;
+
+  &__item {
+    padding: 10px;
+    margin: 0 0 30px 0;
+
+    &:focus {
+      outline: rgb(234, 191, 0) solid 3px;
+    }
+  }
 }
 </style>

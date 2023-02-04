@@ -88,6 +88,17 @@ export default {
       return this.cart.reduce((prev, product) => prev + product.quantity, 0);
     },
   },
+  watch: {
+    cart: {
+      deep: true,
+      
+      handler() {
+        if(!this.isOpen) {
+          this.isOpen = true;
+        }
+      }
+    }
+  }
 };
 </script>
 

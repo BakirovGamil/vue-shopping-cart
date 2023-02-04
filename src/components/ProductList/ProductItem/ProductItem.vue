@@ -1,11 +1,17 @@
 <template>
-  <div class="product-item" @mouseover="mouseOver" @mouseleave="mouseLeave">
+  <div
+    class="product-item"
+    @mouseover="mouseOver"
+    @mouseleave="mouseLeave"
+    @keypress.enter="addToCart"
+  >
+    <div v-if="product.isFreeShipping" class="free-shipping">Free shipping</div>
     <div class="image" :style="imgStyleObject"></div>
-    <p class="title">Black T-shirt with white stripes</p>
+    <p class="title">{{ product.title }}</p>
     <div class="price">
       <small class="currency">$</small>
-      <b>14</b>
-      <span>.90</span>
+      <b>{{product.price.toFixed(0)}}</b>
+      <span>.{{ (product.price % 1 * 100).toFixed(0) }}</span>
     </div>
     <button
       class="button"
@@ -71,6 +77,20 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.product-item {
+  position: relative;
+}
+.free-shipping {
+  position: absolute;
+  color: rgb(236, 236, 236);
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  font-size: 0.6em;
+  background-color: rgb(27, 26, 32);
+  cursor: default;
+  z-index: 1;
+}
 .image {
   height: 320px;
 }
