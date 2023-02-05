@@ -51,7 +51,7 @@ export default {
     padding: 10px;
     margin: 0 0 30px 0;
 
-    &:focus {
+    &:focus-visible {
       outline: rgb(234, 191, 0) solid 3px;
     }
   }

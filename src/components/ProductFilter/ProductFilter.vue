@@ -1,14 +1,13 @@
 <template>
   <div class="product-filter">
     <p class="title"><b>Sizes:</b></p>
-    <div class="checkbox-container" v-for="size in filter" :key="size">
+    <div class="checkbox-container" v-for="size in availableFilters" :key="size">
       <input
+        class="checkbox"
         type="checkbox"
         :id="size"
-        class="checkbox"
-        v-model="filterValue"
         :value="size"
-        @change="filterProducts"
+        v-model="this.filter"
       />
       <label :for="size" class="label">
         <span class="size">{{ size }}</span>
@@ -21,51 +20,26 @@
 export default {
   name: 'ProductFilter',
   emits: {
-    done: (v) => Array.isArray(v),
+    'update:modelValue': (v) => Array.isArray(v),
   },
   props: {
-    filter: {
+    modelValue: {
       type: Array,
       required: true,
     },
-    products: {
+    availableFilters: {
       type: Array,
-      required: false,
-      default: () => [],
-    },
-    property: {
-      type: String,
-      required: false,
-      default: '',
-    },
+      required: true
+    }
   },
   data() {
     return {
-      filterValue: [],
-    };
-  },
-  methods: {
-    filterProducts() {
-      let filteredProducts = this.products;
-
-      if (this.filterValue.length) {
-        filteredProducts = this.products.filter((p) => {
-          return this.filterValue.some((f) => {
-            if (Array.isArray(p[this.property])) {
-              return p[this.property].some((v) => f === v);
-            }
-
-            return p[this.property] === f;
-          });
-        });
-      }
-
-      this.$emit('done', filteredProducts);
-    },
+      filter: this.modelValue
+    }
   },
   watch: {
-    products() {
-      this.filterProducts();
+    filter() {
+      this.$emit('update:modelValue', this.filter);
     }
   }
 };

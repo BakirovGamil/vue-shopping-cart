@@ -7,18 +7,17 @@
         @decrementQuantity="decrementQuantity"
         @remove="remove"
       />
-      <dual-ring-loader :loading="isLoading" class="loader" />
+      <dual-ring-loader :loading="isLoadingProducts" class="loader" />
       <div class="sidebar">
         <product-filter
-          :filter="['XS', 'S', 'M', 'ML', 'L', 'XL', 'XXL']"
-          :products="products"
-          :property="$options.FILTER_PROPERTY"
-          @done="setFilteredProducts"
+          :availableFilters="['XS', 'S', 'M', 'ML', 'L', 'XL', 'XXL']"
+          v-model="filter"
         />
+        <product-sort :availableSorts="[...Object.keys($options.AVAILABLE_SORTS)]" v-model="sort" />
       </div>
       <div class="content">
-        <p class="founded">{{ filteredProducts.length }} Product(s) found</p>
-        <product-list :products="filteredProducts" @addToCart="addToCart" />
+        <p class="founded">{{ sortedProducts.length }} Product(s) found</p>
+        <product-list :products="sortedProducts" @addToCart="addToCart" />
       </div>
     </div>
   </main>
@@ -30,21 +29,30 @@ import ProductList from '@/components/ProductList/ProductList.vue';
 import ProductFilter from '@/components/ProductFilter/ProductFilter.vue';
 import DualRingLoader from '@/components/DualRingLoader/DualRingLoader.vue';
 import ShoppingCart from '@/components/ShoppingCart/ShoppingCart.vue';
+import ProductSort from '@/components/ProductSort/ProductSort.vue';
 
 export default {
   name: 'ProductsView',
-  FILTER_PROPERTY: 'availableSizes',
+  AVAILABLE_SORTS: {
+    'Recomended': null,
+    'Price high to low': (a, b) => b.price - a.price, 
+    'Price low to high': (a, b) => a.price - b.price
+  },
   components: {
     ProductList,
     ProductFilter,
     DualRingLoader,
     ShoppingCart,
+    ProductSort,
   },
   data() {
     return {
       products: [],
-      filteredProducts: [],
       isLoadingProducts: false,
+      
+      filter: [],
+      sort: Object.keys(this.$options.AVAILABLE_SORTS)[0],
+
       cart: [],
     };
   },
@@ -59,9 +67,6 @@ export default {
       this.products = response.data.products;
       this.isLoading = false;
       console.log(response.data.products);
-    },
-    setFilteredProducts(filteredProducts) {
-      this.filteredProducts = filteredProducts;
     },
     addToCart(product) {
       const newProduct = {
@@ -85,25 +90,45 @@ export default {
       this.cart.push(newProduct);
     },
     remove(product) {
-      this.cart = this.cart.filter(p => p.id !== product.id);
+      this.cart = this.cart.filter((p) => p.id !== product.id);
     },
     incrementQuantity(product) {
-      this.cart = this.cart.map(p => {
-        if(p.id === product.id) {
-          return {...p, quantity: p.quantity + 1};
+      this.cart = this.cart.map((p) => {
+        if (p.id === product.id) {
+          return { ...p, quantity: p.quantity + 1 };
         }
 
         return p;
       });
     },
     decrementQuantity(product) {
-      this.cart = this.cart.map(p => {
-        if(p.id === product.id) {
-          return {...p, quantity: p.quantity - 1};
+      this.cart = this.cart.map((p) => {
+        if (p.id === product.id) {
+          return { ...p, quantity: p.quantity - 1 };
         }
 
         return p;
       });
+    },
+  },
+  computed: {
+    filteredProducts() {
+      if (!this.filter.length) {
+        return this.products;
+      }
+
+      return this.products.filter((p) =>
+        p.availableSizes.some((s) => this.filter.includes(s))
+      );
+    },
+    sortedProducts() {
+      let compareFn = this.$options.AVAILABLE_SORTS[this.sort];
+
+      if (compareFn === null) {
+        return this.filteredProducts;
+      }
+
+      return [...this.filteredProducts].sort(compareFn);
     },
   },
 };
