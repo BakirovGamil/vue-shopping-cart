@@ -40,6 +40,9 @@ export default {
   watch: {
     filter() {
       this.$emit('update:modelValue', this.filter);
+    },
+    modelValue() {
+      this.filter = this.modelValue;
     }
   }
 };

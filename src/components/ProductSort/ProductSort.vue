@@ -1,25 +1,35 @@
 <template>
   <div class="sort" :class="{ sort_open: isOpenDropDown }" @click.stop>
-    <button class="sort__btn" @click="toggleDropDown">
-      <div class="sort__title" :class="{ sort__title_open: isOpenDropDown }">
-        Sort
-      </div>
-    </button>
-    <div class="dropdown" v-show="isOpenDropDown">
-      <ul class="dropdown__list">
-        <li
-          v-for="sort in availableSorts"
-          :key="sort"
-          @click="select(sort)"
-          class="dropdown__item"
-          :class="{
-            dropdown__item_current: sort === selectedSort,
-          }"
-        >
+    <template v-if="isMobile">
+      <label for="sortBy" class="label">Sort</label>
+      <select v-model="selectedSort" class="select" id="sortBy">
+        <option v-for="sort in availableSorts" :key="sort" :value="sort">
           {{ sort }}
-        </li>
-      </ul>
-    </div>
+        </option>
+      </select>
+    </template>
+    <template v-else>
+      <button class="sort__btn" @click="toggleDropDown">
+        <div class="sort__title" :class="{ sort__title_open: isOpenDropDown }">
+          Sort
+        </div>
+      </button>
+      <div class="dropdown" v-show="isOpenDropDown">
+        <ul class="dropdown__list">
+          <li
+            v-for="sort in availableSorts"
+            :key="sort"
+            @click="select(sort)"
+            class="dropdown__item"
+            :class="{
+              dropdown__item_current: sort === selectedSort,
+            }"
+          >
+            {{ sort }}
+          </li>
+        </ul>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -45,15 +55,26 @@ export default {
     return {
       isOpenDropDown: false,
       selectedSort: this.modelValue,
+      isMobile: false,
     };
   },
   mounted() {
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile);
     document.addEventListener('click', this.closeDropDown);
   },
   unmounted() {
+    window.removeEventListener('resize', this.checkMobile);
     document.removeEventListener('click', this.closeDropDown);
   },
   methods: {
+    checkMobile() {
+      if (window.innerWidth <= 768) {
+        this.isMobile = true;
+      } else {
+        this.isMobile = false;
+      }
+    },
     select(selectedSort) {
       this.selectedSort = selectedSort;
       this.$emit('update:modelValue', selectedSort);
@@ -68,10 +89,57 @@ export default {
       }
     },
   },
+  watch: {
+    selectedSort() {
+      this.$emit('update:modelValue', this.selectedSort);
+    },
+    modelValue() {
+      this.selectedSort = this.modelValue;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+.select {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.label {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  border-radius: 0;
+  border-top: 1px solid #ddd;
+  color: #666;
+  height: 42px;
+  letter-spacing: 0.3px;
+  line-height: 1.12;
+  padding: 3px 20px 3px 6px;
+  position: relative;
+  text-align: left;
+  width: 100%;
+
+  &::after {
+    --image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='10' height='7' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.057 3.566 7.974.649l1.414 1.414-4.243 4.243-.088-.089-.084.085L.73 2.06 2.141.65l2.916 2.916Z' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-color: #666;
+    color: #666;
+    content: '';
+    height: 8px;
+    -webkit-mask: var(--image) 50%;
+    mask: var(--image) 50%;
+    position: absolute;
+    right: 10px;
+    top: 16px;
+    width: 8px;
+  }
+}
 .sort {
   position: relative;
   cursor: pointer;

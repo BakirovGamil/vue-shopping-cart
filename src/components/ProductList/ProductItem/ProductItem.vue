@@ -10,8 +10,8 @@
     <p class="title">{{ product.title }}</p>
     <div class="price">
       <small class="currency">$</small>
-      <b>{{product.price.toFixed(0)}}</b>
-      <span>.{{ (product.price % 1 * 100).toFixed(0) }}</span>
+      <b>{{ normalizedPrice.integer }}</b>
+      <span>.{{ normalizedPrice.decimal }}</span>
     </div>
     <button
       class="button"
@@ -72,6 +72,17 @@ export default {
         background: `url(${this.imgUrl}) center/cover no-repeat`,
       };
     },
+
+    normalizedPrice() {
+      const integer = this.product.price.toFixed(0);
+      const preDecimal = this.product.price.toFixed(2);
+      const decimal = preDecimal.substring(preDecimal.length - 2);
+
+      return {
+        integer,
+        decimal
+      }
+    }
   },
 };
 </script>
