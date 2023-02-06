@@ -72,12 +72,10 @@ export default {
 
   computed: {
     imgUrl1() {
-      let imgPath = `/src/assets/products/${this.product.sku}-1-product.webp`;
-      return new URL(imgPath, import.meta.url).href;
+      return new URL(`/src/assets/products/${this.product.sku}-1-product.webp`, import.meta.url).href;
     },
     imgUrl2() {
-      let imgPath = `/src/assets/products/${this.product.sku}-2-product.webp`;
-      return new URL(imgPath, import.meta.url).href;
+      return new URL(`/src/assets/products/${this.product.sku}-2-product.webp`, import.meta.url).href;
     },
 
     normalizedPrice() {
