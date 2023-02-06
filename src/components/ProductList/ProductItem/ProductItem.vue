@@ -1,13 +1,12 @@
 <template>
   <div
     class="product-item"
-    @mouseover="mouseOver"
-    @mouseleave="mouseLeave"
     @keypress.enter="addToCart"
   >
     <div v-if="product.isFreeShipping" class="free-shipping">Free shipping</div>
     <div class="image">
-      <img :src="imgUrl" :alt="product.title" />
+      <img :src="imgUrl1" :alt="product.title" class="img1"/>
+      <img :src="imgUrl2" :alt="product.title" class="img2"/>
     </div>
     <p class="title">{{ product.title }}</p>
     <div class="price">
@@ -32,9 +31,6 @@
     </div>
     <button
       class="button"
-      :class="{
-        button_hovered: hovered,
-      }"
       @click="addToCart"
     >
       Add to cart
@@ -58,19 +54,10 @@ export default {
     return {
       selectedSize: '',
       isSelectedSize: true,
-      hovered: false,
     };
   },
 
   methods: {
-    mouseOver() {
-      this.hovered = true;
-    },
-
-    mouseLeave() {
-      this.hovered = false;
-    },
-
     addToCart() {
       if (!this.selectedSize) {
         this.$refs.select.focus();
@@ -84,12 +71,12 @@ export default {
   },
 
   computed: {
-    imgUrl() {
+    imgUrl1() {
       let imgPath = `/src/assets/products/${this.product.sku}-1-product.webp`;
-      if (this.hovered) {
-        imgPath = `/src/assets/products/${this.product.sku}-2-product.webp`;
-      }
-
+      return new URL(imgPath, import.meta.url).href;
+    },
+    imgUrl2() {
+      let imgPath = `/src/assets/products/${this.product.sku}-2-product.webp`;
       return new URL(imgPath, import.meta.url).href;
     },
 
@@ -144,6 +131,16 @@ export default {
 }
 .product-item {
   position: relative;
+
+  &:hover {
+    .button {
+      background: rgb(234, 191, 0);
+    }
+
+    .img2 {
+      display: inline-block;
+    }
+  }
 }
 .free-shipping {
   position: absolute;
@@ -164,9 +161,13 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     height: 100%;
+  }
+
+  .img2 {
+    display: none;
   }
 }
 .title {
@@ -213,9 +214,5 @@ export default {
   transition: background-color 0.2s ease 0s;
   cursor: pointer;
   color: white;
-
-  &_hovered {
-    background-color: rgb(234, 191, 0);
-  }
 }
 </style>
