@@ -88,7 +88,7 @@ export default {
         imgPath = `/src/assets/products/${this.product.sku}-2-product.webp`;
       }
 
-      return new URL(imgPath, window.location.origin).href;
+      return new URL(imgPath, import.meta.url).href;
     },
 
     imgStyleObject() {

@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     imgUrl() {
-      return new URL(`/src/assets/products/${this.product.sku}-1-cart.webp`, window.location.origin).href;
+      return new URL(`/src/assets/products/${this.product.sku}-1-cart.webp`, import.meta.url).href;
     }
   }
 };
