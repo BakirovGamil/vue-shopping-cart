@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const productsUrl = new URL('http://localhost:3000/data');
+const productsUrl = new URL('/.netlify/functions/get-products', window.location.href);
 
 export default class ProductApi {
   static getProducts() {
