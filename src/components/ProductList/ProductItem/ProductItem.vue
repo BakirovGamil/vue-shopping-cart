@@ -6,7 +6,9 @@
     @keypress.enter="addToCart"
   >
     <div v-if="product.isFreeShipping" class="free-shipping">Free shipping</div>
-    <div class="image" :style="imgStyleObject"></div>
+    <div class="image">
+      <img :src="imgUrl" :alt="product.title">
+    </div>
     <p class="title">{{ product.title }}</p>
     <div class="price">
       <small class="currency">$</small>
@@ -91,12 +93,6 @@ export default {
       return new URL(imgPath, import.meta.url).href;
     },
 
-    imgStyleObject() {
-      return {
-        background: `url(${this.imgUrl}) center/cover no-repeat`,
-      };
-    },
-
     normalizedPrice() {
       const integer = this.product.price.toFixed(0);
       const preDecimal = this.product.price.toFixed(2);
@@ -162,6 +158,16 @@ export default {
 }
 .image {
   height: 320px;
+  position: relative;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
 }
 .title {
   margin: 16px 0;
