@@ -127,6 +127,7 @@ export default {
 }
 
 .select {
+  font-size: 16px;
   border: 1px solid rgba(27, 26, 32, 0.7);
   padding: 5px;
 

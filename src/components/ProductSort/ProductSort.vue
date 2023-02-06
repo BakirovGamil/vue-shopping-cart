@@ -2,7 +2,7 @@
   <div class="sort" :class="{ sort_open: isOpenDropDown }" @click.stop>
     <template v-if="isMobile">
       <label for="sortBy" class="label">Sort</label>
-      <select v-model="selectedSort" class="select" id="sortBy">
+      <select v-model="selectedSort" class="sort__select" id="sortBy">
         <option v-for="sort in availableSorts" :key="sort" :value="sort">
           {{ sort }}
         </option>
@@ -101,14 +101,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.select {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-}
 .label {
   display: flex;
   align-items: center;
@@ -143,6 +135,16 @@ export default {
 .sort {
   position: relative;
   cursor: pointer;
+
+  &__select {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      font-size: 16px;
+  }
 
   &_open {
     box-shadow: 0 5px 13px -2px rgba(45, 45, 45, 80%);

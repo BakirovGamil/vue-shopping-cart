@@ -1,35 +1,47 @@
-# vue-shopping-cart
+## 🛍️ Простое ecommerce приложение
 
-This template should help get you started developing with Vue 3 in Vite.
+<p align="center">
+  <img src="./readme.png">
+</p>
 
-## Recommended IDE Setup
+### Обзор
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+* Описание
+* Функционал
+* Используемые технологии
+* [Ссылка на проект]() 
+* Запуск проекта
 
-## Customize configuration
+# Описание:
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+* Простой прототип приложения с корзиной покупок
 
-## Project Setup
+# Функционал:
 
-```sh
+В данной работе представлены:
+* Адаптивный дизайн
+* Добавление и удаление товара из корзины с помощью props и emit
+* Фильтрация товаров по размеру
+* Сортировка товаров по цене
+* Сохранение корзины после перезагруки страницы с помощью localStorage
+
+# Используемые технологии:
+
+* Vue
+* axios
+* localStorage
+
+# Запуск проекта
+```javascript
+
+/* Установка всех зависимостей */
 npm install
-```
 
-### Compile and Hot-Reload for Development
+/* Запуск фейкового апи */
+npm run json-server
 
-```sh
+/* Запустить в новом терминале */
+/* Запуск vue приложения */
 npm run dev
-```
 
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```
