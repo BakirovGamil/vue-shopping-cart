@@ -29,8 +29,8 @@ export default {
     },
   },
   methods: {
-    addToCart(product) {
-      this.$emit('addToCart', product);
+    addToCart(payload) {
+      this.$emit('addToCart', payload);
     },
   },
 };

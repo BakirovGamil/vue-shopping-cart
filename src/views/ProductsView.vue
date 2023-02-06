@@ -13,7 +13,10 @@
           :availableFilters="['XS', 'S', 'M', 'ML', 'L', 'XL', 'XXL']"
           v-model="filter"
         />
-        <product-sort :availableSorts="[...Object.keys($options.AVAILABLE_SORTS)]" v-model="sort" />
+        <product-sort
+          :availableSorts="[...Object.keys($options.AVAILABLE_SORTS)]"
+          v-model="sort"
+        />
       </div>
       <div class="content">
         <p class="founded">{{ sortedProducts.length }} Product(s) found</p>
@@ -24,6 +27,8 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
+
 import ProductApi from '@/api/ProductApi';
 import ProductList from '@/components/ProductList/ProductList.vue';
 import ProductFilter from '@/components/ProductFilter/ProductFilter.vue';
@@ -34,9 +39,9 @@ import ProductSort from '@/components/ProductSort/ProductSort.vue';
 export default {
   name: 'ProductsView',
   AVAILABLE_SORTS: {
-    'Recomended': null,
-    'Price high to low': (a, b) => b.price - a.price, 
-    'Price low to high': (a, b) => a.price - b.price
+    Recomended: null,
+    'Price high to low': (a, b) => b.price - a.price,
+    'Price low to high': (a, b) => a.price - b.price,
   },
   components: {
     ProductList,
@@ -49,7 +54,7 @@ export default {
     return {
       products: [],
       isLoadingProducts: false,
-      
+
       filter: [],
       sort: Object.keys(this.$options.AVAILABLE_SORTS)[0],
 
@@ -68,16 +73,20 @@ export default {
       this.isLoading = false;
       console.log(response.data.products);
     },
-    addToCart(product) {
+    addToCart({ product, size }) {
       const newProduct = {
+        _uid: uuidv4(),
         ...product,
         quantity: 1,
+        size,
       };
 
-      const isInCart = Boolean(this.cart.find((p) => p.id === product.id));
+      const isInCart = Boolean(
+        this.cart.find((p) => p.id === product.id && p.size === size)
+      );
       if (isInCart) {
         this.cart = this.cart.map((p) => {
-          if (p.id === product.id) {
+          if (p.id === product.id && p.size === size) {
             return { ...p, quantity: p.quantity + 1 };
           }
 
@@ -90,25 +99,22 @@ export default {
       this.cart.push(newProduct);
     },
     remove(product) {
-      this.cart = this.cart.filter((p) => p.id !== product.id);
+      this.cart = this.cart.filter((p) => p._uid !== product._uid);
+    },
+    setQuantity(product, newQuantity) {
+      this.cart = this.cart.map((p) => {
+        if (p._uid === product._uid) {
+          return { ...p, quantity: newQuantity};
+        }
+
+        return p;
+      });
     },
     incrementQuantity(product) {
-      this.cart = this.cart.map((p) => {
-        if (p.id === product.id) {
-          return { ...p, quantity: p.quantity + 1 };
-        }
-
-        return p;
-      });
+      this.setQuantity(product, product.quantity + 1);
     },
     decrementQuantity(product) {
-      this.cart = this.cart.map((p) => {
-        if (p.id === product.id) {
-          return { ...p, quantity: p.quantity - 1 };
-        }
-
-        return p;
-      });
+       this.setQuantity(product, product.quantity - 1);
     },
   },
   computed: {
@@ -153,11 +159,6 @@ export default {
 }
 .sidebar {
   padding: 15px;
-
-  @include forMobile {
-    display: grid;
-    justify-content: center;
-  }
 }
 .founded {
   margin: 10px 0;

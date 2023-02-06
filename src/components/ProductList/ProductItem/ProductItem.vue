@@ -13,6 +13,21 @@
       <b>{{ normalizedPrice.integer }}</b>
       <span>.{{ normalizedPrice.decimal }}</span>
     </div>
+    <div class="size">
+      <span>Size:</span>
+      <select v-model="selectedSize" ref="select" class="select" :class="{
+        select_invalid: !isSelectedSize
+      }">
+        <option disabled value="">Please select</option>
+        <option
+          v-for="size in product.availableSizes"
+          :key="size"
+          :value="size"
+        >
+          {{ size }}
+        </option>
+      </select>
+    </div>
     <button
       class="button"
       :class="{
@@ -39,6 +54,8 @@ export default {
   },
   data() {
     return {
+      selectedSize: '',
+      isSelectedSize: true,
       hovered: false,
     };
   },
@@ -53,7 +70,14 @@ export default {
     },
 
     addToCart() {
-      this.$emit('addToCart', this.product);
+      if (!this.selectedSize) {
+        this.$refs.select.focus();
+        this.isSelectedSize = false;
+
+        return;
+      }
+
+      this.$emit('addToCart', {product: this.product, size: this.selectedSize});
     },
   },
 
@@ -80,14 +104,47 @@ export default {
 
       return {
         integer,
-        decimal
-      }
-    }
+        decimal,
+      };
+    },
   },
+
+  watch: {
+    selectedSize() {
+      this.isSelectedSize = true;
+    }
+  }
 };
 </script>
 
 <style scoped lang="scss">
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   80% { transform: rotate(0deg); }
+   85% { transform: rotate(5deg); }
+   95% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.select {
+  border: 1px solid rgba(27, 26, 32, 0.7);
+  padding: 5px;
+
+  &:focus {
+    border: 1px solid rgb(234, 191, 0);
+  }
+
+  &_invalid {
+    border: 1px solid rgba(235, 0, 0, 0.6)  !important;
+    animation: wiggle 0.3s;
+  }
+}
+.size {
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+}
 .product-item {
   position: relative;
 }

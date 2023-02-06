@@ -9,7 +9,7 @@
     <div class="cart-item__info">
       <p class="cart-item__title"> {{ product.title }}</p>
       <p class="cart-item__style-quantity">
-        {{ product.style }} <br /> Quantity: {{ product.quantity }}
+        {{ product.size }} | {{ product.style }} <br /> Quantity: {{ product.quantity }}
       </p>
     </div>
     <div class="cart-item__price">

@@ -20,7 +20,7 @@
         </p>
         <cart-item
           v-for="product in cart"
-          :key="product.id"
+          :key="product._uid"
           :product="product"
           @incrementQuantity="incrementQuantity"
           @decrementQuantity="decrementQuantity"
