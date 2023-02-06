@@ -7,7 +7,7 @@
   >
     <div v-if="product.isFreeShipping" class="free-shipping">Free shipping</div>
     <div class="image">
-      <img :src="imgUrl" :alt="product.title">
+      <img :src="imgUrl" :alt="product.title" />
     </div>
     <p class="title">{{ product.title }}</p>
     <div class="price">

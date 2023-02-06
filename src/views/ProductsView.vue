@@ -88,13 +88,13 @@ export default {
     },
     async getProducts() {
       try {
-        this.isLoading = true;
+        this.isLoadingProducts = true;
         const response = await ProductApi.getProducts();
         this.products = response.data.products;
       } catch (e) {
         this.error = e.message;
       } finally {
-        this.isLoading = false;
+        this.isLoadingProducts = false;
       }
     },
     addToCart({ product, size }) {
@@ -185,6 +185,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 999;
 }
 
 .wrapper {
