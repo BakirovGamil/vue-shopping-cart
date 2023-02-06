@@ -23,6 +23,9 @@
         <product-list :products="sortedProducts" @addToCart="addToCart" />
       </div>
     </div>
+    <div class="error" v-if="error">
+      An error occurred while downloading products
+    </div>
   </main>
 </template>
 
@@ -54,6 +57,7 @@ export default {
     return {
       products: [],
       isLoadingProducts: false,
+      error: '',
 
       filter: [],
       sort: Object.keys(this.$options.AVAILABLE_SORTS)[0],
@@ -63,15 +67,35 @@ export default {
   },
   created() {
     this.getProducts();
+    this.loadCart();
+
+    window.addEventListener('beforeunload', this.saveCart);
+  },
+  unmounted() {
+    window.removeEventListener('beforeunload', this.saveCart);
   },
   methods: {
-    async getProducts() {
-      this.isLoading = true;
-      const response = await ProductApi.getProducts();
+    saveCart() {
+      localStorage.setItem('vueShoppingCart', JSON.stringify(this.cart));
+    },
+    loadCart() {
+      const rawCart = localStorage.getItem('vueShoppingCart');
 
-      this.products = response.data.products;
-      this.isLoading = false;
-      console.log(response.data.products);
+      if (rawCart) {
+        const cart = JSON.parse(rawCart);
+        this.cart = cart;
+      }
+    },
+    async getProducts() {
+      try {
+        this.isLoading = true;
+        const response = await ProductApi.getProducts();
+        this.products = response.data.products;
+      } catch (e) {
+        this.error = e.message;
+      } finally {
+        this.isLoading = false;
+      }
     },
     addToCart({ product, size }) {
       const newProduct = {
@@ -104,7 +128,7 @@ export default {
     setQuantity(product, newQuantity) {
       this.cart = this.cart.map((p) => {
         if (p._uid === product._uid) {
-          return { ...p, quantity: newQuantity};
+          return { ...p, quantity: newQuantity };
         }
 
         return p;
@@ -114,7 +138,7 @@ export default {
       this.setQuantity(product, product.quantity + 1);
     },
     decrementQuantity(product) {
-       this.setQuantity(product, product.quantity - 1);
+      this.setQuantity(product, product.quantity - 1);
     },
   },
   computed: {
@@ -141,6 +165,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
+  background-color: #fae7ec;
+  padding: 10px;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  margin-top: 20px;
+}
 .loader {
   position: absolute;
   left: 50%;
